@@ -61,12 +61,17 @@ const state = {
 //     return itemTile  
 // }
 
+
+// ul = empty string
+
 function renderBasket() {
   console.log("Basket?", state.cart);
+
+  const basket = document.querySelector(".cart--item-list");
+  basket.innerHTML = ""; // items are showing as added in the console, but not only the top line is displaying in the basket
+
   for (let index = 0; index < state.cart.length; index++) {
     const basketItem = state.cart[index];
-  
-    const basket = document.querySelector(".cart--item-list");
 
     const basketLine = document.createElement("li");
     basket.append(basketLine);
@@ -85,22 +90,33 @@ function renderBasket() {
     basketText.innerText = basketItem.name;
     basketText.style.textTransform = "capitalize";
 
-    const basketIncreaseQty = document.createElement("button");
-    basketLine.appendChild(basketIncreaseQty);
-    basketIncreaseQty.setAttribute("class", "quantity-btn, remove-btn");
-    basketIncreaseQty.innerText = "-"
+    const basketDecreaseQty = document.createElement("button");
+    basketLine.appendChild(basketDecreaseQty);
+    basketDecreaseQty.setAttribute("class", "quantity-btn remove-btn center");
+    basketDecreaseQty.innerText = "-";
+    basketDecreaseQty.addEventListener("click", () => {
+      console.log("Remove Item?", basketDecreaseQty);
+      basketQty--;
+      return basketQty;
+    });
 
     const basketDisplayQty = document.createElement("span");
     basketLine.appendChild(basketDisplayQty);
-    basketDisplayQty.setAttribute("class", "quantity-btn, quantity-text");
-    // basketDisplayQty.innerText = state.cart.quantity
-    basketDisplayQty.innerText = "1"
+    basketDisplayQty.setAttribute("class", "quantity-btn quantity-text");
+    let basketQty = basketItem.quantity;
+    // let basketQty = 1
+    basketDisplayQty.innerText = basketQty;
 
-    const basketDecreaseQty = document.createElement("button");
-    basketLine.appendChild(basketDecreaseQty);
-    basketDecreaseQty.setAttribute("class", "quantity-btn, add-btn");
-    basketDecreaseQty.innerText = "+"
-    }
+    const basketIncreaseQty = document.createElement("button");
+    basketLine.appendChild(basketIncreaseQty);
+    basketIncreaseQty.setAttribute("class", "quantity-btn add-btn center");
+    basketIncreaseQty.innerText = "+";
+    basketIncreaseQty.addEventListener("click", () => {
+      console.log("Add Item?", basketIncreaseQty);
+      basketQty++;
+      return basketQty;
+    });
+  }
 }
 
 function renderShop() {
@@ -125,12 +141,13 @@ function renderShop() {
     itemImg.alt = shopItem.name;
     itemImg.style.textTransform = "capitalize";
 
-    const addToBAsketButton = document.createElement("button");
-    itemTile.appendChild(addToBAsketButton);
-    addToBAsketButton.setAttribute("class", "button");
-    addToBAsketButton.innerText = "add to basket";
-    addToBAsketButton.addEventListener("click", () => {
-      state.cart.push(shopItem);
+    const addToBasketButton = document.createElement("button");
+    itemTile.appendChild(addToBasketButton);
+    addToBasketButton.setAttribute("class", "button");
+    addToBasketButton.innerText = "add to basket";
+    addToBasketButton.addEventListener("click", () => {
+      state.items.map(addOne => ({...addOne, quantity: 1}))
+      state.cart.push(shopItem); // should I push a qty 1 here as well?
       renderBasket()
     })
   }
