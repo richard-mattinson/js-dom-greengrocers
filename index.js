@@ -61,9 +61,52 @@ const state = {
 //     return itemTile  
 // }
 
+function renderBasket() {
+  console.log("Basket?", state.cart);
+  for (let index = 0; index < state.cart.length; index++) {
+    const basketItem = state.cart[index];
+  
+    const basket = document.querySelector(".cart--item-list");
+
+    const basketLine = document.createElement("li");
+    basket.append(basketLine);
+    basketLine.setAttribute("class", "cart--item-list, li");
+    basketLine.style.listStyle = "none";
+
+    const basketImg = document.createElement("img");
+    basketLine.appendChild(basketImg);
+    basketImg.setAttribute("class", "cart--item-icon");
+    basketImg.src = "assets/icons/" + basketItem.id + ".svg";
+    basketImg.alt = basketItem.name;
+    basketImg.style.textTransform = "capitalize";
+
+    const basketText = document.createElement("p");
+    basketLine.appendChild(basketText);
+    basketText.innerText = basketItem.name;
+    basketText.style.textTransform = "capitalize";
+
+    const basketIncreaseQty = document.createElement("button");
+    basketLine.appendChild(basketIncreaseQty);
+    basketIncreaseQty.setAttribute("class", "quantity-btn, remove-btn");
+    basketIncreaseQty.innerText = "-"
+
+    const basketDisplayQty = document.createElement("span");
+    basketLine.appendChild(basketDisplayQty);
+    basketDisplayQty.setAttribute("class", "quantity-btn, quantity-text");
+    // basketDisplayQty.innerText = state.cart.quantity
+    basketDisplayQty.innerText = "1"
+
+    const basketDecreaseQty = document.createElement("button");
+    basketLine.appendChild(basketDecreaseQty);
+    basketDecreaseQty.setAttribute("class", "quantity-btn, add-btn");
+    basketDecreaseQty.innerText = "+"
+    }
+}
+
 function renderShop() {
+  console.log("Items?", state.items);
   for (let index = 0; index < state.items.length; index++) {
-    const storeItems = state.items[index];
+    const shopItem = state.items[index];
 
     const shelf = document.querySelector(".store--item-list");
 
@@ -78,19 +121,24 @@ function renderShop() {
 
     const itemImg = document.createElement("img");
     itemDiv.appendChild(itemImg);
-    itemImg.src = "assets/icons/" + storeItems.id + ".svg";
-    itemImg.alt = storeItems.name;
+    itemImg.src = "assets/icons/" + shopItem.id + ".svg";
+    itemImg.alt = shopItem.name;
     itemImg.style.textTransform = "capitalize";
 
     const addToBAsketButton = document.createElement("button");
     itemTile.appendChild(addToBAsketButton);
     addToBAsketButton.setAttribute("class", "button");
     addToBAsketButton.innerText = "add to basket";
+    addToBAsketButton.addEventListener("click", () => {
+      state.cart.push(shopItem);
+      renderBasket()
+    })
   }
 }
 
 function run() {  
   renderShop()
+  renderBasket()
 }
 
 run();
