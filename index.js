@@ -53,3 +53,26 @@ const state = {
   ],
   cart: []
 };
+
+for (let index = 0; index < state.items.length; index++) {
+  const storeItems = state.items[index];
+  
+const shelf = document.querySelector('.store--item-list');
+
+const itemTile = document.createElement("li");
+  shelf.append(itemTile);
+  itemTile.setAttribute("class", "store--item-list, li");
+  itemTile.style.listStyle = "none";
+
+const itemImg = document.createElement("img");
+  itemTile.appendChild(itemImg);
+  itemImg.setAttribute("class", "store--item-icon");
+  itemImg.src = "assets/icons/" + storeItems.id + ".svg"
+  itemImg.alt = storeItems.name
+  itemImg.style.textTransform = "capitalize";
+
+const addToBAsketButton = document.createElement("button");
+  itemTile.appendChild(addToBAsketButton);
+  addToBAsketButton.setAttribute("class", "button");
+  addToBAsketButton.innerText = "add to basket";
+}

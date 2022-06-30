@@ -46,6 +46,7 @@ button {
   display: grid;
   place-items: center;
   grid-row-gap: 0.5rem;
+  /* border: #000000 1px solid; */
 }
 
 .store--item-icon {
