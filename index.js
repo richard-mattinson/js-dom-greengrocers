@@ -3,76 +3,94 @@ const state = {
     {
       id: "001-beetroot",
       name: "beetroot",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "002-carrot",
       name: "carrot",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "003-apple",
       name: "apple",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "004-apricot",
       name: "apricot",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "005-avocado",
       name: "avocado",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "006-bananas",
       name: "bananas",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "007-bell-pepper",
       name: "bell pepper",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "008-berry",
       name: "berry",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "009-blueberry",
       name: "blueberry",
-      price: 0.35
+      price: 0.35,
     },
     {
       id: "010-eggplant",
       name: "eggplant",
-      price: 0.35
-    }
+      price: 0.35,
+    },
   ],
-  cart: []
+  cart: [],
 };
 
-for (let index = 0; index < state.items.length; index++) {
-  const storeItems = state.items[index];
-  
-const shelf = document.querySelector('.store--item-list');
+// function createItemTile(shopItem) {
+//     const itemTile = document.createElement("li");
+//     itemTile.setAttribute("class", "store--item-list, li");
+//     itemTile.style.listStyle = "none";
+//     return itemTile  
+// }
 
-const itemTile = document.createElement("li");
-  shelf.append(itemTile);
-  itemTile.setAttribute("class", "store--item-list, li");
-  itemTile.style.listStyle = "none";
+function renderShop() {
+  for (let index = 0; index < state.items.length; index++) {
+    const storeItems = state.items[index];
 
-const itemImg = document.createElement("img");
-  itemTile.appendChild(itemImg);
-  itemImg.setAttribute("class", "store--item-icon");
-  itemImg.src = "assets/icons/" + storeItems.id + ".svg"
-  itemImg.alt = storeItems.name
-  itemImg.style.textTransform = "capitalize";
+    const shelf = document.querySelector(".store--item-list");
 
-const addToBAsketButton = document.createElement("button");
-  itemTile.appendChild(addToBAsketButton);
-  addToBAsketButton.setAttribute("class", "button");
-  addToBAsketButton.innerText = "add to basket";
+    const itemTile = document.createElement("li");
+    shelf.append(itemTile);
+    itemTile.setAttribute("class", "store--item-list, li");
+    itemTile.style.listStyle = "none";
+
+    const itemDiv = document.createElement("div");
+    itemTile.append(itemDiv);
+    itemDiv.setAttribute("class", "store--item-icon");
+
+    const itemImg = document.createElement("img");
+    itemDiv.appendChild(itemImg);
+    itemImg.src = "assets/icons/" + storeItems.id + ".svg";
+    itemImg.alt = storeItems.name;
+    itemImg.style.textTransform = "capitalize";
+
+    const addToBAsketButton = document.createElement("button");
+    itemTile.appendChild(addToBAsketButton);
+    addToBAsketButton.setAttribute("class", "button");
+    addToBAsketButton.innerText = "add to basket";
+  }
 }
+
+function run() {  
+  renderShop()
+}
+
+run();
