@@ -118,28 +118,30 @@ function renderBasket() {
     });
     
     const basketTotal = document.querySelector(".total-number");
-    basketTotal.innerText = `£ ${basketTotalValue.toFixed(2)}`;
+    basketTotal.innerText = `£${basketTotalValue.toFixed(2)}`;
     console.log("Basket Price?", basketPrice);
   }
 }
 
 function incrementBasket(basketItem) {
   basketItem.quantity++;
-  updateBasketTotal(basketItem)
+  addToBasketTotal(basketItem)
   renderBasket();
 }
 
 function decrementBasket(basketItem) {
   if (basketItem.quantity > 1) {
     basketItem.quantity--;
+    subtractToBasketTotal(basketItem)
     renderBasket();
   } else {
     state.cart.splice(state.cart.indexOf(basketItem), 1);
+    subtractToBasketTotal(basketItem);
     renderBasket();
   }
 }
 
-function updateBasketTotal(basketItem) {
+function addToBasketTotal(basketItem) {
   // console.log('Update Price Item', basketItem.price);
   // console.log('Update Total', basketTotalValue);
   const totalUpdate = basketTotalValue += basketItem.price
@@ -147,6 +149,13 @@ function updateBasketTotal(basketItem) {
   return totalUpdate 
 }
 
+function subtractToBasketTotal(basketItem) {
+  // console.log('Update Price Item', basketItem.price);
+  // console.log('Update Total', basketTotalValue);
+  const totalUpdate = (basketTotalValue -= basketItem.price);
+  // console.log('Total Update', totalUpdate);
+  return totalUpdate;
+}
 
 function renderShop() {
   // console.log("Items?", state.items);
@@ -178,18 +187,18 @@ function renderShop() {
     addToBasketButton.addEventListener("click", () => {
       console.log("Basket state?", state.cart);
 
-      let tempBasket = state.cart.find((items) => {
+      let basketItem = state.cart.find((items) => {
         return items.id === shopItem.id;
       });
-      if (tempBasket !== undefined) {
-        tempBasket.quantity++;
+      if (basketItem !== undefined) {
+        basketItem.quantity++;
       } else {
-        tempBasket = { ...shopItem };
-        tempBasket.quantity = 1;
-        state.cart.push(tempBasket); // should I push a qty 1 here as well?
+        basketItem = { ...shopItem };
+        basketItem.quantity = 1;
+        state.cart.push(basketItem); // should I push a qty 1 here as well?
       }
       renderBasket();
-      updateBasketTotal()
+      addToBasketTotal()
     });
   }
 }
