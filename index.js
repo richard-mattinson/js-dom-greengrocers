@@ -58,20 +58,24 @@ const state = {
 //     const itemTile = document.createElement("li");
 //     itemTile.setAttribute("class", "store--item-list, li");
 //     itemTile.style.listStyle = "none";
-//     return itemTile  
+//     return itemTile
 // }
 
-
-// ul = empty string
+let basketTotalValue = 0
+console.log('Total', basketTotalValue);
 
 function renderBasket() {
-  console.log("Basket?", state.cart);
+  // console.log("Basket?", state.cart);
 
   const basket = document.querySelector(".cart--item-list");
-  basket.innerHTML = ""; // items are showing as added in the console, but not only the top line is displaying in the basket
+  basket.innerHTML = ""; // this line must be before the for loop, or each item added to basket will replace the last
 
   for (let index = 0; index < state.cart.length; index++) {
     const basketItem = state.cart[index];
+
+    let basketQty = basketItem.quantity;
+    let basketPrice = basketItem.price;
+    console.log("Basket Qty?", basketQty);
 
     const basketLine = document.createElement("li");
     basket.append(basketLine);
@@ -90,37 +94,62 @@ function renderBasket() {
     basketText.innerText = basketItem.name;
     basketText.style.textTransform = "capitalize";
 
+    // BASKET QUANTITY
     const basketDecreaseQty = document.createElement("button");
     basketLine.appendChild(basketDecreaseQty);
     basketDecreaseQty.setAttribute("class", "quantity-btn remove-btn center");
     basketDecreaseQty.innerText = "-";
     basketDecreaseQty.addEventListener("click", () => {
-      console.log("Remove Item?", basketDecreaseQty);
-      basketQty--;
-      return basketQty;
+      decrementBasket(basketItem, basketQty)
     });
 
     const basketDisplayQty = document.createElement("span");
     basketLine.appendChild(basketDisplayQty);
     basketDisplayQty.setAttribute("class", "quantity-btn quantity-text");
-    let basketQty = basketItem.quantity;
-    // let basketQty = 1
     basketDisplayQty.innerText = basketQty;
+    console.log("Basket Counter?", basketQty); //state is updated, but DOM isn't?
 
     const basketIncreaseQty = document.createElement("button");
     basketLine.appendChild(basketIncreaseQty);
     basketIncreaseQty.setAttribute("class", "quantity-btn add-btn center");
     basketIncreaseQty.innerText = "+";
     basketIncreaseQty.addEventListener("click", () => {
-      console.log("Add Item?", basketIncreaseQty);
-      basketQty++;
-      return basketQty;
+      incrementBasket(basketItem, basketQty);
     });
+    
+    const basketTotal = document.querySelector(".total-number");
+    basketTotal.innerText = `£ ${basketTotalValue.toFixed(2)}`;
+    console.log("Basket Price?", basketPrice);
   }
 }
 
+function incrementBasket(basketItem) {
+  basketItem.quantity++;
+  updateBasketTotal(basketItem)
+  renderBasket();
+}
+
+function decrementBasket(basketItem) {
+  if (basketItem.quantity > 1) {
+    basketItem.quantity--;
+    renderBasket();
+  } else {
+    state.cart.splice(state.cart.indexOf(basketItem), 1);
+    renderBasket();
+  }
+}
+
+function updateBasketTotal(basketItem) {
+  // console.log('Update Price Item', basketItem.price);
+  // console.log('Update Total', basketTotalValue);
+  const totalUpdate = basketTotalValue += basketItem.price
+  // console.log('Total Update', totalUpdate);
+  return totalUpdate 
+}
+
+
 function renderShop() {
-  console.log("Items?", state.items);
+  // console.log("Items?", state.items);
   for (let index = 0; index < state.items.length; index++) {
     const shopItem = state.items[index];
 
@@ -145,17 +174,29 @@ function renderShop() {
     itemTile.appendChild(addToBasketButton);
     addToBasketButton.setAttribute("class", "button");
     addToBasketButton.innerText = "add to basket";
+
     addToBasketButton.addEventListener("click", () => {
-      state.items.map(addOne => ({...addOne, quantity: 1}))
-      state.cart.push(shopItem); // should I push a qty 1 here as well?
-      renderBasket()
-    })
+      console.log("Basket state?", state.cart);
+
+      let tempBasket = state.cart.find((items) => {
+        return items.id === shopItem.id;
+      });
+      if (tempBasket !== undefined) {
+        tempBasket.quantity++;
+      } else {
+        tempBasket = { ...shopItem };
+        tempBasket.quantity = 1;
+        state.cart.push(tempBasket); // should I push a qty 1 here as well?
+      }
+      renderBasket();
+      updateBasketTotal()
+    });
   }
 }
 
-function run() {  
-  renderShop()
-  renderBasket()
+function run() {
+  renderShop();
+  renderBasket();
 }
 
 run();
